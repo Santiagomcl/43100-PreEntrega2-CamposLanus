@@ -16,9 +16,9 @@ const pasosBallet = [
 ];
 
 function ejecutarPaso(paso) {
-  console.log(paso);
+ 
   alert(`Realizando ${paso.nombre}...\n${paso.nombre} ${paso.velocidad} con brazos en ${paso.brazos}`);
-  resultados.push({ ...paso });
+  resultados.push(paso);
 }
 
 function seleccionarPasoAlAzar() {
