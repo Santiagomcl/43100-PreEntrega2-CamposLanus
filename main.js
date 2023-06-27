@@ -1,86 +1,137 @@
-let numeroPasos = 0;
-let contadorPasos = 0;
-let velocidad = "";
-let brazosArriba = false;
-let auxiliar = 0;
-let resultados = [];
+const pasosBallet = [];
 
-const pasosBallet = [
-  { nombre: "Plié", velocidad: "normal", brazos: "Primera" },
-  { nombre: "Grand Plié", velocidad: "lenta", brazos: "Quinta" },
-  { nombre: "Relevé", velocidad: "normal", brazos: "Primera" },
-  { nombre: "Pirueta", velocidad: "rápida", brazos: "Quinta" },
-  { nombre: "Passe", velocidad: "rápida", brazos: "Quinta" },
-  { nombre: "Tour", velocidad: "rápida", brazos: "Primera" },
-  { nombre: "Sissone", velocidad: "media", brazos: "Tercera" },
-];
+// Obtener el formulario y los campos de entrada
+const loginForm = document.getElementById("loginForm");
+const usernameInput = document.getElementById("usernameInput");
+const pasosForm = document.getElementById("pasosForm");
+const nombrePasoInput = document.getElementById("nombrePasoInput");
+const velocidadPasoInput = document.getElementById("velocidadPasoInput");
+const brazosPasoInput = document.getElementById("brazosPasoInput");
 
-function ejecutarPaso(paso) {
- 
-  alert(`Realizando ${paso.nombre}...\n${paso.nombre} ${paso.velocidad} con brazos en ${paso.brazos}`);
-  resultados.push(paso);
-}
+// Obtener los usuarios logueados desde el almacenamiento local o inicializarlo como un array vacío
+let usuariosLogueados = JSON.parse(localStorage.getItem("usuariosLogueados")) || [];
 
-function seleccionarPasoAlAzar() {
-  const indiceAleatorio = Math.floor(Math.random() * pasosBallet.length);
-  return pasosBallet[indiceAleatorio];
-}
+// Manejar el evento de envío del formulario de inicio de sesión
+loginForm.addEventListener("submit", function (event) {
+  event.preventDefault(); // Evitar el envío del formulario
 
-function mostrarVideoDelDia() {
-  const enlaceVideo = "https://youtu.be/5J9la3Dp9uU";
-  console.log("Video del día:", enlaceVideo);
-}
+  const username = usernameInput.value;
 
-function realizarDanza() {
-  numeroPasos = parseInt(prompt("Ingrese el número de pasos:"));
-  velocidad = prompt("Ingrese la velocidad (normal/rápida/lenta):");
-  brazosArriba = confirm("¿Los brazos están arriba?");
+  // Crear un objeto de usuario logueado
+  const usuarioLogueado = {
+    username: username
+  };
 
-  contadorPasos = 0;
-  auxiliar = 0;
-  resultados = [];
+  // Agregar el usuario logueado al array de usuariosLogueados
+  usuariosLogueados.push(usuarioLogueado);
 
-  if (!isNaN(numeroPasos) && numeroPasos > 0) {
-    while (contadorPasos < numeroPasos) {
-      contadorPasos++;
+  // Limpiar el campo de entrada
+  usernameInput.value = "";
 
-      const pasoActual = pasosBallet[auxiliar % pasosBallet.length];
-      ejecutarPaso(pasoActual);
+  // Mostrar los usuarios logueados
+  mostrarUsuariosLogueados();
 
-      auxiliar++;
+  // Guardar los usuarios logueados en el localStorage
+  localStorage.setItem("usuariosLogueados", JSON.stringify(usuariosLogueados));
+});
 
-      if (auxiliar === 10) {
-        velocidad = "lenta";
-      }
+// Manejar el evento de envío del formulario de pasos de danza
+pasosForm.addEventListener("submit", function (event) {
+  event.preventDefault(); // Evitar el envío del formulario
 
-      if (auxiliar === 15) {
-        brazosArriba = false;
-      }
-    }
+  const nombrePaso = nombrePasoInput.value;
+  const velocidadPaso = velocidadPasoInput.value;
+  const brazosPaso = brazosPasoInput.value;
 
-    console.log("Lista de resultados:");
-    for (let i = 0; i < resultados.length; i++) {
-      console.log(`- ${resultados[i].nombre} ${resultados[i].velocidad} con brazos en ${resultados[i].brazos}`);
-    }
+  // Crear un objeto de paso de danza
+  const paso = {
+    nombre: nombrePaso,
+    velocidad: velocidadPaso,
+    brazos: brazosPaso
+  };
 
-    console.table(resultados);
+  // Agregar el paso de danza al array de pasosBallet
+  pasosBallet.push(paso);
 
-    const pasoPreferido = seleccionarPasoAlAzar();
-    console.log("Paso preferido del día:", pasoPreferido);
+  // Limpiar los campos de entrada
+  nombrePasoInput.value = "";
+  velocidadPasoInput.value = "";
+  brazosPasoInput.value = "";
 
-    mostrarVideoDelDia();
+  // Mostrar el resultado
+  mostrarResultado();
 
-    alert("Danza completada. Revisa la consola para ver los resultados.");
-  } else {
-    console.log("El número de pasos ingresado no es válido.");
-    alert("El número de pasos ingresado no es válido.");
+  // Mostrar el video correspondiente al paso de danza
+  mostrarVideo(pasosBallet.length - 1);
+
+  // Guardar los pasos de danza en el localStorage
+  localStorage.setItem("pasosBallet", JSON.stringify(pasosBallet));
+});
+
+// Función para mostrar los usuarios logueados
+function mostrarUsuariosLogueados() {
+  const usuariosLogueadosUl = document.getElementById("usuariosLogueados");
+  usuariosLogueadosUl.innerHTML = ""; // Limpiar la lista de usuarios logueados
+
+  for (let i = 0; i < usuariosLogueados.length; i++) {
+    const usuarioLogueado = usuariosLogueados[i];
+    const li = document.createElement("li");
+    li.textContent = usuarioLogueado.username;
+    usuariosLogueadosUl.appendChild(li);
   }
 }
 
-function iniciarDanza() {
-  if (confirm("¿Deseas iniciar la danza?")) {
-    realizarDanza();
+// Función para mostrar el resultado de los pasos de danza
+function mostrarResultado() {
+  const resultadoDiv = document.getElementById("resultado");
+  resultadoDiv.innerHTML = ""; // Limpiar el contenido previo
+
+  for (let i = 0; i < pasosBallet.length; i++) {
+    const paso = pasosBallet[i];
+    const p = document.createElement("p");
+    p.textContent = `${paso.nombre} - ${paso.velocidad} - ${paso.brazos}`;
+    resultadoDiv.appendChild(p);
   }
 }
 
-iniciarDanza();
+// Función para mostrar el video correspondiente al paso de danza
+function mostrarVideo(index) {
+  const videoContainer = document.getElementById("videoContainer");
+  videoContainer.innerHTML = ""; // Limpiar el contenido previo
+
+  const videoId = obtenerVideoId(index);
+  const iframe = document.createElement("iframe");
+  iframe.width = "560";
+  iframe.height = "315";
+  iframe.src = `https://www.youtube.com/embed/${videoId}`;
+  iframe.frameborder = "0";
+  iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+  iframe.allowfullscreen = true;
+
+  videoContainer.appendChild(iframe);
+}
+
+// Función para obtener el ID del video de YouTube según el índice del paso
+function obtenerVideoId(index) {
+  const videos = [
+    "h_VE64GXjQQ",
+    "jQ73d68HQCs",
+    "vgeyctb6r50"
+    // Agrega más IDs de video según los pasos de la danza
+  ];
+  return videos[index];
+}
+
+// Obtener los pasos de danza desde el almacenamiento local o inicializarlo como un array vacío
+pasosBallet = JSON.parse(localStorage.getItem("pasosBallet")) || [];
+
+// Mostrar los usuarios logueados
+mostrarUsuariosLogueados();
+
+// Mostrar el resultado de los pasos de danza
+mostrarResultado();
+
+// Mostrar el video del último paso de danza si existen pasos
+if (pasosBallet.length > 0) {
+  mostrarVideo(pasosBallet.length - 1);
+}
