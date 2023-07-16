@@ -1,41 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Ballet Program</title>
+  <title>Danza Contemporánea</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
-    <h1>Creador de pasos</h1>
+    <h1 id="welcomeMessage">Danza Contemporánea</h1>
     <form id="loginForm">
-      <label for="usernameInput">Mail:</label>
-      <input type="text" id="usernameInput" required>
+      <label for="firstNameInput">Nombre:</label>
+      <input type="text" id="firstNameInput" required>
       <br>
-      <label for="passwordInput">Contraseña:</label>
-      <input type="password" id="passwordInput" required>
+      <label for="lastNameInput">Apellido:</label>
+      <input type="text" id="lastNameInput" required>
       <br>
       <button type="submit">Iniciar sesión</button>
     </form>
-    <h2>Usuarios logueados:</h2>
-    <ul id="usuariosLogueados"></ul>
     <div id="danzaDiv">
       <form id="pasosForm">
-        <label for="nombrePasoInput">Nombre del Paso:</label>
-        <input type="text" id="nombrePasoInput" required>
+        <label for="nombrePerformanceInput">Nombre de la Performance:</label>
+        <input type="text" id="nombrePerformanceInput" required>
         <br>
-        <label for="velocidadPasoInput">Velocidad:</label>
-        <input type="text" id="velocidadPasoInput" required>
+        <label for="youtubeLinkInput">Enlace de YouTube:</label>
+        <input type="text" id="youtubeLinkInput" required>
         <br>
-        <label for="brazosPasoInput">Brazos:</label>
-        <input type="text" id="brazosPasoInput" required>
-        <br>
-        <button type="submit">Agregar Paso</button>
+        <button type="submit">Agregar Performance</button>
       </form>
       <div id="resultado"></div>
       <div id="videoContainer"></div>
+      <button id="btnDarDevolucion" class="hidden">Dar Devolución</button>
+      <div id="devolucionesIcono" class="icono hidden">
+        <span id="contadorDevoluciones">0</span>
+      </div>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="main.js"></script>
 </body>
 </html>
